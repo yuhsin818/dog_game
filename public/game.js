@@ -45,31 +45,31 @@ let failImage;
 
 
 function preload() {
-  playerImages[0] = loadImage("../assets/player1.png");
-  playerImages[1] = loadImage("../assets/player2.png");
-  playerImagesUmbrella[0] = loadImage('../assets/player_umbrella1.png');
-  playerImagesUmbrella[1] = loadImage('../assets/player_umbrella2.png');
-  playerHitImage = loadImage('../assets/player_hit.png');
-  dogImages[0] = loadImage("../assets/dog1.png");
-  dogImages[1] = loadImage("../assets/dog2.png");
-  black_dogImages[0] = loadImage("../assets/black_dog1.png");
-  black_dogImages[1] = loadImage("../assets/black_dog2.png");
-  dogHitImage = loadImage('../assets/dog_hit.png');
-  bgImage = loadImage("../assets/street.png");
-  umbrellaImage = loadImage('../assets/umbrella.png');
-  heartImage = loadImage('../assets/heart.png');
-  emptyHeartImage = loadImage('../assets/heart_empty.png');
+  playerImages[0] = loadImage("assets/player1.png");
+  playerImages[1] = loadImage("assets/player2.png");
+  playerImagesUmbrella[0] = loadImage('assets/player_umbrella1.png');
+  playerImagesUmbrella[1] = loadImage('assets/player_umbrella2.png');
+  playerHitImage = loadImage('assets/player_hit.png');
+  dogImages[0] = loadImage("assets/dog1.png");
+  dogImages[1] = loadImage("assets/dog2.png");
+  black_dogImages[0] = loadImage("assets/black_dog1.png");
+  black_dogImages[1] = loadImage("assets/black_dog2.png");
+  dogHitImage = loadImage('assets/dog_hit.png');
+  bgImage = loadImage("assets/street.png");
+  umbrellaImage = loadImage('assets/umbrella.png');
+  heartImage = loadImage('assets/heart.png');
+  emptyHeartImage = loadImage('assets/heart_empty.png');
 
-  startImage1 = loadImage('../assets/start1.png');
-  startImage2 = loadImage('../assets/start2.png');
-  preImage = loadImage('../assets/preImage.png');
-  preImage2 = loadImage('../assets/preImage2.png');
-  successImage = loadImage('../assets/success.png');
-  failImage = loadImage('../assets/fail.png');
+  startImage1 = loadImage('assets/start1.png');
+  startImage2 = loadImage('assets/start2.png');
+  preImage = loadImage('assets/preImage.png');
+  preImage2 = loadImage('assets/preImage2.png');
+  successImage = loadImage('assets/success.png');
+  failImage = loadImage('assets/fail.png');
 
-  treeImage = loadImage('../assets/tree.png');
-  lineImage = loadImage('../assets/line.png');
-  pixelFont = loadFont("../assets/fonts/Cubic_11.ttf");
+  treeImage = loadImage('assets/tree.png');
+  lineImage = loadImage('assets/line.png');
+  pixelFont = loadFont("assets/fonts/Cubic_11.ttf");
 }
 
 function setup() {
