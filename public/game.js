@@ -1,3 +1,4 @@
+let canvas;
 let player;
 let playerImages = [];
 let playerImagesUmbrella = [];
@@ -73,7 +74,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(1230, 700);
+  canvas = createCanvas(1230, 700);
   textFont(pixelFont);
   textAlign(CENTER, CENTER);
   player = new Player();
@@ -164,23 +165,56 @@ function draw() {
     player.x += player.speed;
   }
 
+  let isHoveringNext = (mouseX >= 870 && mouseX <= 970 &&
+    mouseY >= 520 && mouseY <= 540);
+  let isHoveringStart = (mouseX >= 820 && mouseX <= 980 &&
+      mouseY >= 500 && mouseY <= 540);
+  let isHoveringRestart = (mouseX >= 1010 && mouseX <= 1180 &&
+      mouseY >= 585 && mouseY <= 620)
+    
+  canvas.style('cursor', 'default');
+  // if (isHoveringNext || isHoveringStart) {
+  // canvas.style('cursor', 'pointer');
+  // } else {
+  // canvas.style('cursor', 'default');
+  // }
+
+  // fill(isHoveringNext ? 'red' : 0);
+  // text("下一頁", 870, 520);
+
+  // fill(isHoveringStart ? 'red' : 0);
+  // text("開始遊戲", 820, 500);
+
 
 
   /////開頭的字
   if (!gameStarted && countdown > 0 && !buttonPressed && startPage === 1) {
 
+    if (isHoveringNext) {
+      canvas.style('cursor', 'pointer');
+      } else {
+      canvas.style('cursor', 'default');
+      }
     image(preImage, 0, 0, width, height);
     image(startImage1, width/2 - width/3, height/2 - height/3, width/1.5, height/1.5);
+    fill(isHoveringNext ? 'red' : 'white');
+    textSize(32);
+    text("next >", 920, 520);
     return;
 
   }
   else if (!gameStarted && countdown > 0 && !buttonPressed && startPage === 2) {
-    
+    if (isHoveringStart) {
+      canvas.style('cursor', 'pointer');
+      } else {
+      canvas.style('cursor', 'default');
+      }
+
     image(preImage, 0, 0, width, height);
     image(startImage2, width/2 - width/3, height/2 - height/3, width/1.5, height/1.5);
-    // textSize(20);
-    // text("規則說明：\n1. 左右鍵移動\n2. 躲避狗狗\n3. 撿傘可抵擋一次攻擊\n4. 撐過90秒獲勝", width / 2, height / 2 - 50);
-
+    fill(isHoveringStart ? 'red' : 'white');
+    textSize(28);
+    text("遊戲開始 >", 900, 520);
     return;
   }
   else if (!gameStarted && countdown > 0 && buttonPressed) {
@@ -245,20 +279,36 @@ function draw() {
   }
 
   textAlign(CENTER, CENTER);
-  textSize(40);
-  fill('white');
+  // textSize(40);
+  // fill('white');
 
   if (gameOver) {
     if(success){
+      if (isHoveringRestart) {
+        canvas.style('cursor', 'pointer');
+        } else {
+        canvas.style('cursor', 'default');
+        }
+      fill(isHoveringRestart ? 'red' : 'white');
       image(successImage, 0, 0, width, height);
+      textSize(32);
+      text("重新開始 >", 1100, 600);
+      textSize(40);
+      fill('white');
       text("成功抵達宿舍", width / 2, height / 2);
-      textSize(32);
-      text("重新開始 >", 1100, 600);
     } else {
+      if (isHoveringRestart) {
+        canvas.style('cursor', 'pointer');
+        } else {
+        canvas.style('cursor', 'default');
+        }
+      fill(isHoveringRestart ? 'red' : 'white');
       image(failImage, 0, 0, width, height);
-      text("遊戲失敗", width / 2, height / 2);
       textSize(32);
       text("重新開始 >", 1100, 600);
+      textSize(40);
+      fill('white');
+      text("遊戲失敗", width / 2, height / 2);
     }
     
     // if (!restartButton) {
@@ -445,7 +495,7 @@ function draw() {
 
   if (player.isUmbrellaActive) {
     let secondsLeft = ceil(player.umbrellaTimer / 60);
-    fill(223, 60, 63);
+    fill('blue');
     text(`雨傘啟動中：${secondsLeft} `, width/2 - 80, 60);
   }
   if(timeLeft < 10){
@@ -789,8 +839,8 @@ function mousePressed() {
       if (
         mouseX >= 870 &&
         mouseX <= 970 &&
-        mouseY >= 500 &&
-        mouseY <= 530
+        mouseY >= 520 &&
+        mouseY <= 540
       ) {
         startPage = 2;
         // buttonPressed = true;
@@ -803,10 +853,10 @@ function mousePressed() {
       // 確認是否點到 開始遊戲 區域 790 500, 965 500, 965 530, 790 530
   
       if (
-        mouseX >= 790 &&
-        mouseX <= 970 &&
+        mouseX >= 820 &&
+        mouseX <= 980 &&
         mouseY >= 500 &&
-        mouseY <= 530
+        mouseY <= 540
       ) {
         buttonPressed = true;
         startCountdown();
@@ -815,10 +865,10 @@ function mousePressed() {
   }
   if(gameOver === true){
     if (
-      mouseX >= 0 &&
-      mouseX <= width &&
-      mouseY >= 0 &&
-      mouseY <= height
+      mouseX >= 1010 &&
+      mouseX <= 1180 &&
+      mouseY >= 585 &&
+      mouseY <= 620
     ) {
       resetGame();
     }
