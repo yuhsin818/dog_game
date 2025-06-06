@@ -44,6 +44,23 @@ let preImage2;
 let successImage;
 let failImage;
 
+let start_sound;
+let dog_bark1;
+let dog_bark2;
+let dog_howl;
+let dog_cry;
+let get_sound;
+let umbrella_sound;
+let hurt_sound;
+let click_sound;
+let success_sound;
+let fail_sound;
+let endSoundPlayed = false;
+let lastDogCryTime = 0;
+const dogCryCooldown = 2000; // 3000 毫秒 = 3 秒
+
+
+
 
 function preload() {
   playerImages[0] = loadImage("assets/player1.png");
@@ -71,6 +88,18 @@ function preload() {
   treeImage = loadImage('assets/tree.png');
   lineImage = loadImage('assets/line.png');
   pixelFont = loadFont("assets/fonts/Cubic_11.ttf");
+
+  dog_bark2 = loadSound('assets/dogs-barking.mp3');
+  dog_bark1 = loadSound('assets/dog-bark.mp3');
+  dog_howl = loadSound('assets/dog-howl.mp3');
+  dog_cry = loadSound('assets/dog-cry.mp4');
+  start_sound = loadSound('assets/race-start.mp3');
+  get_sound = loadSound('assets/coin.mp3');
+  hurt_sound = loadSound('assets/ough.mp3');
+  umbrella_sound = loadSound('assets/umbrella.mp4');
+  click_sound = loadSound('assets/point.mp3');
+  success_sound = loadSound('assets/success.mp3');
+  fail_sound = loadSound('assets/fail.mp3');
 }
 
 function setup() {
@@ -111,25 +140,51 @@ function setup() {
 // }
 
 function startCountdown() {
+  start_sound.play();
   countdown = 3;
+
   countdownTimer = setInterval(() => {
     countdown--;
     if (countdown < 0) {
       clearInterval(countdownTimer);
 
-      //遊戲計時
+      // 開始遊戲
       gameStarted = true;
+
       gameTimer = setInterval(() => {
         timeLeft--;
+
+        // 90~50 秒：每5秒播放 dog_bark1
+        if (timeLeft <= 90 && timeLeft > 30 && timeLeft % 5 === 0) {
+          if (dog_bark1.isPlaying()) dog_bark1.stop();
+          dog_bark1.play();
+        }
+
+        // 50~10 秒：每20秒播放 dog_bark2
+        if (timeLeft <= 30 && timeLeft > 10 && timeLeft % 20 === 0) {
+          if (dog_bark2.isPlaying()) dog_bark2.stop();
+          dog_bark2.play();
+        }
+
+        // 10~0 秒：一次播放 dog_howl
+        if (timeLeft === 10) {
+          if (dog_howl.isPlaying()) dog_howl.stop();
+          dog_howl.play();
+        }
+
+        // 遊戲結束
         if (timeLeft <= 0) {
           clearInterval(gameTimer);
           gameOver = true;
           success = true;
-        }  
+        }
+
       }, 1000);
     }
   }, 1000);
 }
+
+
 
 
 function resetGame() {
@@ -151,6 +206,7 @@ function resetGame() {
   gameTimer;
   timeLeft = 90;
   umbrellaCooldown = false;
+  endSoundPlayed = false;
 }
 
 function draw() {
@@ -283,7 +339,18 @@ function draw() {
   // fill('white');
 
   if (gameOver) {
+    dog_bark2.stop();
+    if (!endSoundPlayed) {
+      // 第一次 gameOver 進入時才播放一次音效
+      if (success) {
+        success_sound.play();
+      } else {
+        fail_sound.play();
+      }
+      endSoundPlayed = true; // 音效已播放
+    }
     if(success){
+      // success_sound.play();
       if (isHoveringRestart) {
         canvas.style('cursor', 'pointer');
         } else {
@@ -297,6 +364,7 @@ function draw() {
       fill('white');
       text("成功抵達宿舍", width / 2, height / 2);
     } else {
+      // fail_sound.play();
       if (isHoveringRestart) {
         canvas.style('cursor', 'pointer');
         } else {
@@ -399,13 +467,23 @@ function draw() {
   for (let i = dogs.length - 1; i >= 0; i--) {
     dogs[i].update();
     dogs[i].display();
+    // dog_bark.play();
   
     if (dogs[i].hits(player)) {
       if (player.isUmbrellaActive) {
         console.log("雨傘抵擋攻擊");
         dogs[i].getHitByUmbrella(); // 執行「被傘撞飛」
+        // dog_cry.play();
+
+        // 撞飛音效：檢查 3 秒冷卻
+        let now = millis();
+        if (now - lastDogCryTime > dogCryCooldown) {
+          dog_cry.play();
+          lastDogCryTime = now;
+        }
       } else {
         player.hit();
+        hurt_sound.play();
         lives--;
         dogs.splice(i, 1);
         continue;
@@ -422,13 +500,16 @@ function draw() {
   for (let i = black_dogs.length - 1; i >= 0; i--) {
     black_dogs[i].update();
     black_dogs[i].display();
+    // dog_howl.play();
   
     if (black_dogs[i].hits(player)) {
       if (player.isUmbrellaActive) {
         console.log("雨傘抵擋攻擊");
         black_dogs[i].getHitByUmbrella(); // 執行「被傘撞飛」
+        // dog_cry.play();
       } else {
         player.hit();
+        hurt_sound.play();
         lives--;
         black_dogs.splice(i, 1);
         continue;
@@ -451,6 +532,7 @@ function draw() {
     if (umbrella.hits(player)) {
       // 撐傘邏輯已在 Umbrella 類內部處理，這裡不用再寫
       umbrellas.splice(i, 1); // 撞到後從陣列移除
+      get_sound.play();
     } else if (umbrella.offscreen()) {
       umbrellas.splice(i, 1);
     }
@@ -823,6 +905,7 @@ class Umbrella {
 function keyPressed() {
   if (key === ' ') {
     player.activateUmbrella();
+    umbrella_sound.play();
   }
 }
 
@@ -842,6 +925,7 @@ function mousePressed() {
         mouseY >= 520 &&
         mouseY <= 540
       ) {
+        click_sound.play();
         startPage = 2;
         // buttonPressed = true;
         // startCountdown();
@@ -858,6 +942,7 @@ function mousePressed() {
         mouseY >= 500 &&
         mouseY <= 540
       ) {
+        // click_sound.play();
         buttonPressed = true;
         startCountdown();
       }
