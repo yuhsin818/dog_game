@@ -214,7 +214,7 @@ function draw() {
     image(startImage2, width/2 - width/3, height/2 - height/3, width/1.5, height/1.5);
     fill(isHoveringStart ? 'red' : 'white');
     textSize(28);
-    text("遊戲開始 >", 900, 520);
+    text("開始遊戲 >", 900, 520);
     return;
   }
   else if (!gameStarted && countdown > 0 && buttonPressed) {
