@@ -59,6 +59,9 @@ let endSoundPlayed = false;
 let lastDogCryTime = 0;
 const dogCryCooldown = 2000; // 3000 毫秒 = 3 秒
 
+let bgm;
+let bgm_played = false;
+
 
 
 
@@ -100,6 +103,7 @@ function preload() {
   click_sound = loadSound('assets/point.mp3');
   success_sound = loadSound('assets/success.mp3');
   fail_sound = loadSound('assets/fail.mp3');
+  bgm = loadSound('assets/8bit_bgm.mp3');
 }
 
 function setup() {
@@ -107,6 +111,8 @@ function setup() {
   textFont(pixelFont);
   textAlign(CENTER, CENTER);
   player = new Player();
+  bgm.setVolume(0.4);
+
   // startScreen();
 
   // 初始化左邊樹
@@ -151,6 +157,11 @@ function startCountdown() {
       // 開始遊戲
       gameStarted = true;
 
+      if(bgm_played == false){
+        bgm.play();
+      }
+      bgm_played = true;
+
       gameTimer = setInterval(() => {
         timeLeft--;
 
@@ -177,6 +188,7 @@ function startCountdown() {
           clearInterval(gameTimer);
           gameOver = true;
           success = true;
+          bgm.stop();
         }
 
       }, 1000);
@@ -207,6 +219,7 @@ function resetGame() {
   timeLeft = 90;
   umbrellaCooldown = false;
   endSoundPlayed = false;
+  bgm_played = false;
 }
 
 function draw() {
@@ -560,6 +573,7 @@ function draw() {
   if (lives <= 0) {
     gameOver = true;
     clearInterval(gameTimer);
+    bgm.stop();
   } 
 
   // 顯示時間
@@ -955,6 +969,7 @@ function mousePressed() {
       mouseY >= 585 &&
       mouseY <= 620
     ) {
+      click_sound.play();
       resetGame();
     }
   }
